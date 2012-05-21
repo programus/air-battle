@@ -61,7 +61,7 @@ cAircraft = (_x, _y, _d)->
 	validNum = (n, target) -> 0 <= n < if target == "d" then MAX_DIR else MAX_UNIT
 	gsetNum = (param, member, target)->
 		if param?
-			if not isFinite(s)
+			if not isFinite(param)
 				throw e =
 					reason: "Not numeric"
 					message: "The parameter must be a integer"
@@ -108,7 +108,7 @@ cAircraft = (_x, _y, _d)->
 			if __y? then generateBody()
 			_y
 		d: (__d)->
-			_d = gsetNum __d % 4, _d, "d"
+			_d = gsetNum (if __d? then __d % 4 else __d), _d, "d"
 			if __d? then generateBody()
 			_d
 		xyd: (__x, __y, __d) ->
