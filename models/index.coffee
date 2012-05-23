@@ -80,20 +80,24 @@ cAircraft = (_x, _y, _d)->
 	generateBody = ->
 		body = []
 		cells = []
-		for delta in deltas[_d]
-			x = _x + delta[0]
-			y = _y + delta[1]
-			if 0 <= x < MAX_UNIT && 0 <= y < MAX_UNIT
-				body.push [x, y]
-				cells[x * 10 + y] = if delta[0] == 0 && delta[1] == 0 then 'X' else 'O'
-			else
-				throw e =
-					reason: "InvalidLocation"
-					message: "Number out of range"
-					target: "(#{delta[0]}, #{delta[1]})"
-					param: "(#{_x}, #{_y})"
+		if _x? && _y? && _d?
+			for delta in deltas[_d]
+				x = _x + delta[0]
+				y = _y + delta[1]
+				if 0 <= x < MAX_UNIT && 0 <= y < MAX_UNIT
+					body.push [x, y]
+					cells[x * 10 + y] = if delta[0] == 0 && delta[1] == 0 then 'X' else 'O'
+				else
+					throw e =
+						reason: "InvalidLocation"
+						message: "Number out of range"
+						target: "(#{delta[0]}, #{delta[1]})"
+						param: "(#{_x}, #{_y}, #{_d})"
 		body
 
+	_x = gsetNum _x, _x, "x"
+	_y = gsetNum _y, _y, "y"
+	_d = gsetNum (if _d? then _d % 4 else _d), _d, "d"
 	# generate body when constructed.
 	generateBody()
 
@@ -114,7 +118,7 @@ cAircraft = (_x, _y, _d)->
 		xyd: (__x, __y, __d) ->
 			_x = gsetNum __x, _x, "x"
 			_y = gsetNum __y, _y, "y"
-			_d = gsetNum __d, _d, "d"
+			_d = gsetNum (if __d? then __d % 4 else __d), _d, "d"
 			if __x? || __y? || __d? then generateBody()
 			_return =
 				x: _x
