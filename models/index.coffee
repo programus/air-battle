@@ -62,17 +62,9 @@ cAircraft = (_x, _y, _d)->
 	gsetNum = (param, member, target)->
 		if param?
 			if not isFinite(param)
-				throw e =
-					reason: "Not numeric"
-					message: "The parameter must be a integer"
-					target: target
-					param: param
+				throw new Error("The parameter, #{target}, must be an integer: #{param}")
 			if not validNum param, target
-				throw e =
-					reason: "InvalidParam"
-					message: "Number out of range"
-					target: target
-					param: param
+				throw new Error("Number out of range: #{target} = #{param}")
 			else
 				member = param
 		member
@@ -88,11 +80,7 @@ cAircraft = (_x, _y, _d)->
 					body.push [x, y]
 					cells[x * 10 + y] = if delta[0] == 0 && delta[1] == 0 then 'X' else 'O'
 				else
-					throw e =
-						reason: "InvalidLocation"
-						message: "Number out of range"
-						target: "(#{delta[0]}, #{delta[1]})"
-						param: "(#{_x}, #{_y}, #{_d})"
+					throw new Error("Number out of range: aircraft(#{_x},#{_y},#{_d}) -> (#{delta[0]},#{delta[1]})")
 		body
 
 	_x = gsetNum _x, _x, "x"
