@@ -3,7 +3,7 @@ chai = require 'chai'
 should = chai.should()
 _u = require 'underscore'
 
-models = require '../models'
+models = require('../req') 'models'
 
 # Air-craft class
 cAircraft = models.cAircraft
