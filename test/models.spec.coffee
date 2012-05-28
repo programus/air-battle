@@ -72,7 +72,16 @@ asort = (a, b)->
 		return d if d != 0
 	return 0
 
+# turn aircraft to int
+convInt = (a) -> a.toInt()
+
 describe 'cAircraft.', ->
+	describe 'const #MAX_UNIT()', ->
+		it 'should be 10', ->
+			cAircraft.MAX_UNIT().should.eql 10
+	describe 'const #MAX_DIR()', ->
+		it 'should be 4', ->
+			cAircraft.MAX_DIR().should.eql 4
 	for d in [0...8]
 		for x in [0..9]
 			for y in [0..9]
@@ -129,6 +138,9 @@ describe 'cAircraft.', ->
 									map = a.toMap()
 									cells = a.cells()
 									map[(_y + 1) * 22 + _x * 2 + 2].should.eql(cells[_x * 10 + _y] ? '.') for _y in [0..9] for _x in [0..9]
+						describe 'aircrafts check', ->
+							it "should in aircrafts", ->
+								_u.map(models.aircrafts, convInt).should.include a.toInt()
 					else
 						describe 'exception cases for out range numbers:', ->
 							describe '#constructors', ->
@@ -333,14 +345,12 @@ describe 'cLayout.', ->
 						(-> layout = cLayout(data.as)).should.not.throw Error
 				describe "#aircrafts() get", ->
 					it "should be the same aircraft array", ->
-						convInt = (a) -> a.toInt()
 						_u.map(layout.aircrafts(), convInt).should.eql _u.map(data.as, convInt)
 				describe "#aircrafts() set", ->
 					it "should be set by shuffled aircraft array", ->
 						aa = _u.shuffle data.as
 						lo = cLayout data.as
 						lo.aircrafts aa
-						convInt = (a) -> a.toInt()
 						_u.map(lo.aircrafts(), convInt).should.eql _u.map(aa, convInt)
 				describe "#cells()", ->
 					it "should be a sum of aircrafts", ->
