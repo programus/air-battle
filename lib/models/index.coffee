@@ -117,11 +117,11 @@ cAircraft = (_x, _y, _d)->
 		toInt: -> _x * 100 + _y * 10 + _d
 		toString: -> "(#{_x}, #{_y}): #{"k>j<"[_d]}"
 		toMap: ->
-			map = (
-				(' ' + (cells[x * 10 + y] ? '.') for x in [0..(MAX_UNIT - 1)])
+			map = " #{(' ' + _i for _i in [0..(MAX_UNIT - 1)]).join('')}\n" + (
+				y + (' ' + (cells[x * 10 + y] ? '.') for x in [0..(MAX_UNIT - 1)])
 					.join('') for y in [0..(MAX_UNIT - 1)]).join('\n')
 
-# static method
+# static methods
 cAircraft.parse = (s) ->
 	n = parseInt(s)
 	d = n % 10
@@ -129,13 +129,16 @@ cAircraft.parse = (s) ->
 	x = ((n / 100) | 0) % 10
 	cAircraft(x, y, d)
 
+cAircraft.sort = (a, b) ->
+	a.toInt() - b.toInt()
 
 # layout class. A layout contains 3 aircrafts
 cLayout = (_aircrafts...)->
 	cells = []
 	setAircraft = (param) ->
-		if _aircrafts.length == 1
-			_aircrafts = _aircrafts[0][..(AIRCRAFT_NUM - 1)]
+		if param.length == 1
+			param = param[0]
+		_aircrafts = param[..(AIRCRAFT_NUM - 1)]
 
 	setAircraft(_aircrafts)
 
@@ -145,7 +148,6 @@ cLayout = (_aircrafts...)->
 			if __a?
 				setAircraft(__a)
 			_aircrafts
-		push: (a) -> _aircrafts.push(a)
 		isValid: ->
 			cells = []
 			for a, i in _aircrafts
@@ -158,10 +160,14 @@ cLayout = (_aircrafts...)->
 				else
 					break
 			return true
-		cells: -> cells
+		cells: ->
+			if !(cells? && cells.length? && cells.length > 0)
+				if !@isValid()
+					cells = ['']
+			cells
 		toStorageInt: ->
 			num = 0
-			for a, i in _aircrafts.sort((a, b) -> a.toInt() - b.toInt())
+			for a, i in _aircrafts[0...AIRCRAFT_NUM].sort((a, b) -> a.toInt() - b.toInt())
 				if i < AIRCRAFT_NUM
 					num = num * 1000 + a.toInt()
 			num
@@ -171,12 +177,10 @@ cLayout = (_aircrafts...)->
 			String.fromCharCode(num >> 16) + String.fromCharCode(num & 0xFFFF)
 
 		toMap: ->
-			if cells.length <= 0
-				"Call isValid() to fill cell information"
-			else
-				map = (
-					(' ' + (cells[x * 10 + y] ? '.') for x in [0..(MAX_UNIT - 1)])
-						.join('') for y in [0..(MAX_UNIT - 1)]).join('\n')
+			_cells = @cells()
+			map = " #{(' ' + _i for _i in [0..(MAX_UNIT - 1)]).join('')}\n" + (
+				y + (' ' + (_cells[x * 10 + y] ? '.') for x in [0..(MAX_UNIT - 1)])
+					.join('') for y in [0..(MAX_UNIT - 1)]).join('\n')
 
 # static method
 cLayout.parse = (s) ->
