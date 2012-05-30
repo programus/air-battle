@@ -1,0 +1,4 @@
+{
+  "db": "airbattle",
+  "collections": ["layoutInfo", "userInfo"]
+}
