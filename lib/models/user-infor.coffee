@@ -16,3 +16,6 @@ cUserInfor = ->
     point: null
     save: (callback) ->
       db.save(dbdata(@), callback)
+
+UserInfor.load = ->
+
