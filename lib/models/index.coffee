@@ -1,5 +1,5 @@
 root = exports ? this
 root.cAircraft = require('./aircraft').cAircraft
-root.cLayout = require('./layout').cLayout
+root.cFormation = require('./formation').cFormation
 root.aircrafts = require('./aircrafts')
 

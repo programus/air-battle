@@ -7,8 +7,8 @@ models = require('../req') 'models'
 
 # Air-craft class
 cAircraft = models.cAircraft
-# Layout class
-cLayout = models.cLayout
+# Formation class
+cFormation = models.cFormation
 
 # turn aircraft to int
 convInt = (a) -> a.toInt()
@@ -56,52 +56,52 @@ testData = [
 	}
 ]
 
-describe 'cLayout.', ->
+describe 'cFormation.', ->
 	for d in testData
 		((data) ->
 			describe "(input:#{data.inputInt})", ->
-				layout = null
+				formation = null
 				describe "#constructors", ->
-					it "should construct a layout by aircrafts", ->
-						(-> layout = cLayout(data.as[0], data.as[1], data.as[2])).should.not.throw(Error)
-					it "should construct a layout by a aircraft array", ->
-						(-> layout = cLayout(data.as)).should.not.throw Error
+					it "should construct a formation by aircrafts", ->
+						(-> formation = cFormation(data.as[0], data.as[1], data.as[2])).should.not.throw(Error)
+					it "should construct a formation by a aircraft array", ->
+						(-> formation = cFormation(data.as)).should.not.throw Error
 				describe "#aircrafts() get", ->
 					it "should be the same aircraft array", ->
-						_u.map(layout.aircrafts(), convInt).should.eql _u.map(data.as, convInt)
+						_u.map(formation.aircrafts(), convInt).should.eql _u.map(data.as, convInt)
 				describe "#aircrafts() set", ->
 					it "should be set by shuffled aircraft array", ->
 						aa = _u.shuffle data.as
-						lo = cLayout data.as
+						lo = cFormation data.as
 						lo.aircrafts aa
 						_u.map(lo.aircrafts(), convInt).should.eql _u.map(aa, convInt)
 				describe "#cells()", ->
 					it "should be a sum of aircrafts", ->
-						layout.aircrafts().push cAircraft(4, 0, 0)
+						formation.aircrafts().push cAircraft(4, 0, 0)
 						if data.valid
-							_u.compact(layout.cells()).length.should.eql 30
+							_u.compact(formation.cells()).length.should.eql 30
 						else
-							layout.cells().should.eql ['']
+							formation.cells().should.eql ['']
 				describe "#isValid()", ->
 					it "should be #{data.valid}", ->
-						layout.isValid().should.eql data.valid
+						formation.isValid().should.eql data.valid
 				describe "#toStorageInt()", ->
 					it "should return an integer with the expected value: #{data.outputInt}", ->
-						layout.toStorageInt().should.eql data.outputInt
+						formation.toStorageInt().should.eql data.outputInt
 				describe "#toStorageString()", ->
 					it "should return a string with the expected value", ->
-						str = layout.toStorageString()
+						str = formation.toStorageString()
 						((str.charCodeAt(0) << 16) + str.charCodeAt(1)).should.eql data.outputInt
 				describe "static #parse()", ->
-					it "should return a layout by an integer: #{data.inputInt}", ->
-						(-> layout = cLayout.parse(data.inputInt)).should.not.throw Error
-					it "should return a layout by a string", ->
-						str = layout.toStorageString()
-						(-> layout = cLayout.parse(str)).should.not.throw Error
+					it "should return a formation by an integer: #{data.inputInt}", ->
+						(-> formation = cFormation.parse(data.inputInt)).should.not.throw Error
+					it "should return a formation by a string", ->
+						str = formation.toStorageString()
+						(-> formation = cFormation.parse(str)).should.not.throw Error
 				describe '#toMap()', ->
 					it "should get a correct map", ->
 						if data.valid
-							map = layout.toMap()
-							cells = layout.cells()
+							map = formation.toMap()
+							cells = formation.cells()
 							map[(_y + 1) * 22 + _x * 2 + 2].should.eql(cells[_x * 10 + _y] ? '.') for _y in [0..9] for _x in [0..9]
 		)(d)

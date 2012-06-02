@@ -2,8 +2,8 @@ cAircraft = require('./aircraft').cAircraft
 
 AIRCRAFT_NUM = 3
 
-# layout class. A layout contains 3 aircrafts
-cLayout = (_aircrafts...)->
+# formation class. A formation contains 3 aircrafts
+cFormation = (_aircrafts...)->
 	cells = []
 	setAircraft = (param) ->
 		if param.length == 1
@@ -13,7 +13,7 @@ cLayout = (_aircrafts...)->
 	setAircraft(_aircrafts)
 
 	# the return object
-	layout =
+	formation =
 		aircrafts: (__a) ->
 			if __a?
 				setAircraft(__a)
@@ -53,16 +53,16 @@ cLayout = (_aircrafts...)->
 					.join('') for y in [0..(cAircraft.MAX_UNIT() - 1)]).join('\n')
 
 # static method
-cLayout.parse = (s) ->
+cFormation.parse = (s) ->
 	n = if isFinite(s) then parseInt(s) else (s.charCodeAt(0) << 16) + s.charCodeAt(1)
 	as = []
 	for i in [1..AIRCRAFT_NUM]
 		as.splice(0, 0, cAircraft.parse(n % 1000))
 		n = (n / 1000) | 0
-	cLayout(as)
+	cFormation(as)
 
-cLayout.AIRCRAFT_NUM = AIRCRAFT_NUM
+cFormation.AIRCRAFT_NUM = AIRCRAFT_NUM
 
 root = exports ? this
-root.cLayout = cLayout
+root.cFormation = cFormation
 

@@ -1,28 +1,28 @@
-cLayout   = require 'layout'
+cFormation   = require 'formation'
 cAircraft = require 'aircraft'
 db = require '../db'
 
-cLayoutInfor = ->
+cFormationInfor = ->
 
   dbdata = (li) ->
     _data =
-      l: li.layout.toStorageInt()
+      l: li.formation.toStorageInt()
       m: li.master
       c: li.contributors
 
-  layoutInfor =
-    layout: cLayout()
+  formationInfor =
+    formation: cFormation()
     masters: []
     contributors: []
     save: (callback) ->
-      if @layout.isValid()
+      if @formation.isValid()
         db.save(dbdata(@), callback)
 
-cLayoutInfor.load = (layoutInt, callback) ->
-  db.findOne {l: layoutInt}, (err, docs) ->
+cFormationInfor.load = (formationInt, callback) ->
+  db.findOne {l: formationInt}, (err, docs) ->
     if ! err?
-      li = cLayoutInfor()
-      li.layout = cLayout.parse docs.l
+      li = cFormationInfor()
+      li.formation = cFormation.parse docs.l
       li.masters = docs.m
       li.contributors = docs.c
     else
