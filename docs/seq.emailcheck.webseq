@@ -1,0 +1,42 @@
+# Copy the contents and paste to the URL below
+# to get the UML
+# http://www.websequencediagrams.com/
+# Sequence Diagram for User Sign Up
+
+participant User
+participant "v:check" as View
+participant "c:UserControl" as Control
+participant "m:UserInfor" as Model
+participant "db:UserInfor" as db
+
+User->View       : check[get](email)
+activate User
+activate View
+View->Control    : checkEmail(email)
+activate Control
+Control->Model   : getUser({email:data})
+activate Model
+Model->db        : findUser(email)
+activate db
+alt Email not found
+    db-->Model      : return null
+    Model-->Control : return null
+    Control-->View  : new email ok
+    View-->User     : email available
+else Email exists
+    db-->Model      : return user
+    Model-->Control : email exists
+    Control-->View  : email not available
+    View-->User     : email not available
+else db connection or insertion error
+    db-->Model      : fatal error
+    Model-->Control : db error
+    Control-->View  : db error
+    View-->User     : showSystemError
+end
+deactivate db
+deactivate Model
+deactivate Control
+deactivate View
+deactivate User
+

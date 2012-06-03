@@ -1,0 +1,50 @@
+# Copy the contents and paste to the URL below
+# to get the UML
+# http://www.websequencediagrams.com/
+# Sequence Diagram for User Login
+
+participant User
+participant "v:login" as View
+participant Session
+participant "c:UserControl" as Control
+participant "m:UserInfor" as Model
+participant "db:UserInfor" as db
+
+User->View       : login[get]
+activate User
+activate View
+View-->User      : showLoginPage
+deactivate View
+deactivate User
+User->View       : login[post](username, password)
+activate User
+activate View
+View->Control    : requestLogin(username, password)
+activate Control
+Control->Model   : getUser(username, password)
+activate Model
+Model->db        : findUser(username, password)
+activate db
+alt successful case
+    db-->Model       : return user
+    Model-->Control  : return user
+    Control->Session : save(username)
+    activate Session
+    Control-->View   : login succeeded
+    View-->User      : showLoggedInPage
+else username/password mismatch
+    db-->Model      : return null
+    Model-->Control : return null
+    Control-->View  : username/password mismatch
+    View-->User     : username/password mismatch
+else db connection or find error
+    db-->Model      : fatal error
+    Model-->Control : fatal error
+    Control-->View  : db error
+    View-->User     : showSystemError
+end
+deactivate db
+deactivate Model
+deactivate Control
+deactivate View
+deactivate User

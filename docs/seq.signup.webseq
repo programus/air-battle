@@ -1,0 +1,51 @@
+# Copy the contents and paste to the URL below
+# to get the UML
+# http://www.websequencediagrams.com/
+# Sequence Diagram for User Sign Up
+
+participant User
+participant "v:signup" as View
+participant "c:UserControl" as Control
+participant "m:UserInfor" as Model
+participant "db:UserInfor" as db
+
+User->View       : signup[get]
+activate User
+activate View
+View-->User      : showSignupPage
+deactivate View
+deactivate User
+User->View       : signup[post](data)
+activate User
+activate View
+View->Control    : insert(data)
+activate Control
+Control->Model   : create(data)
+activate Model
+Model-->Control  : created
+Control->Model   : insertUser()
+Model->db        : insert()
+activate db
+alt successful case
+    db-->Model            : inserted
+    Model-->Control       : signedUp
+    note right of Control : login at the sametime.
+    Control-->View        : signedUp
+    View-->User           : showSignedUpPage
+else Username or Email duplicated
+    db-->Model      : duplicated error
+    Model-->Control : duplicated error
+    Control-->View  : duplicated error
+    View-->User     : showDuplicatedError
+else db connection or insertion error
+    db-->Model      : fatal error
+    Model-->Control : db error
+    Control-->View  : db error
+    View-->User     : showSystemError
+end
+deactivate db
+deactivate Model
+deactivate Control
+deactivate View
+deactivate User
+

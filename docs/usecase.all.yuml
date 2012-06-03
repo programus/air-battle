@@ -1,0 +1,18 @@
+// copy the contents and paste it into the url below
+// to get the UML
+// http://yuml.me
+// Air Battle Use Case
+[User]-(Sign Up)
+[User]-(Login)
+[User]-(View Profile)
+[Player]-(Challenge New Game)
+[Player]-(Resume Current Game)
+[Player]-(Abort Current Game)
+[Contributor]-(Contribute New Formation)
+[Player]^[User]
+[Contributor]^[User]
+(Sign Up)>(Username unique check)
+(Sign Up)>(Email unique check)
+(View Profile)>(View all mastered formation)
+(View Profile)>(View all contributed formation)
+(Challenge New Game)>(Pick a random formation)

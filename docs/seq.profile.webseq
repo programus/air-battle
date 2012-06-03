@@ -1,0 +1,51 @@
+# Copy the contents and paste to the URL below
+# to get the UML
+# http://www.websequencediagrams.com/
+# Sequence Diagram for User View Profile
+
+participant User
+participant "v:profile" as View
+participant "c:UserControl" as Control
+participant Session
+participant "m:UserInfor" as Model
+participant "db:UserInfor" as db
+
+User->View       : profile[get]
+activate User
+activate View
+View->Control    : requestProfile(username)
+activate Control
+Control->Session : get current user
+activate Session
+Session-->Control: return current user
+deactivate Session
+Control->Model   : getUser(username)
+activate Model
+Model->db        : findUser(username)
+activate db
+alt successful case
+    db-->Model       : return user
+    Model-->Control  : return user
+    Control-->View   : return user
+    note left of Control
+        include mastered & contributed formations details link
+        only when request user is the same as current user
+        for other users, only show the count
+    end note
+    View-->User      : showProfilePage
+else username not found
+    db-->Model      : return null
+    Model-->Control : return null
+    Control-->View  : no such user
+    View-->User     : showUserNotExistsPage
+else db connection or find error
+    db-->Model      : fatal error
+    Model-->Control : fatal error
+    Control-->View  : db error
+    View-->User     : showSystemError
+end
+deactivate db
+deactivate Model
+deactivate Control
+deactivate View
+deactivate User

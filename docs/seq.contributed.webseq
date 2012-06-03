@@ -1,0 +1,51 @@
+# Copy the contents and paste to the URL below
+# to get the UML
+# http://www.websequencediagrams.com/
+# Sequence Diagram for User's mastered formations
+
+participant User
+participant "v:profile" as View
+participant "c:UserControl" as Control
+participant Session
+participant "m:UserInfor" as Model
+participant "db:UserInfor" as db
+
+User->View       : contributed[get]
+activate User
+activate View
+View->Control    : requestContributed(username)
+activate Control
+Control->Session : get current user
+activate Session
+Session-->Control: return current user
+deactivate Session
+alt current user == request user
+    Control->Model   : getUser(username)
+    activate Model
+    Model->db        : findUser(username)
+    activate db
+    alt successful case
+        db-->Model       : return user
+        Model-->Control  : return user
+        Control-->View   : return contributed formation list
+        View-->User      : showProfilePage
+    else username not found
+        db-->Model      : return null
+        Model-->Control : return null
+        Control-->View  : no such user
+        View-->User     : showUserNotExistsPage
+    else db connection or find error
+        db-->Model      : fatal error
+        Model-->Control : fatal error
+        Control-->View  : db error
+        View-->User     : showSystemError
+    end
+else current user != request user
+    Control-->View : access denied
+    View-->User    : showDeniedPage
+end
+deactivate db
+deactivate Model
+deactivate Control
+deactivate View
+deactivate User

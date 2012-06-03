@@ -1,0 +1,14 @@
+# Copy the contents and paste to the URL below
+# to get the UML
+# http://www.websequencediagrams.com/
+# Sequence Diagram for User's mastered formations
+
+participant Player
+participant "v:game" as View
+participant "c:game" as Control
+participant Session
+participant "m:progress" as Model
+participant "m:formation" as Formation
+
+Player->View: challenge[get]
+
